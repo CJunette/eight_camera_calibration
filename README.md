@@ -36,6 +36,8 @@ python camera_calibration.py capture --board-type charuco --charuco-squares 9x7 
 
 ChArUco 需要 OpenCV 的 ArUco 模块，因此依赖为 `opencv-contrib-python`。安装时请卸载环境中冲突的 `opencv-python` 包后再执行 `pip install -r requirements.txt`。
 
+如果标定板由 OpenCV 4.5 或更早版本生成，且方格行数为偶数、左上角是白格，请额外加入 `--charuco-legacy-pattern`。该布局与 OpenCV 4.6 之后的默认布局不同；图案布局不匹配时，程序可能检测到 ArUco 标记却无法得到 ChArUco 角点。
+
 ## 1. 确认 8 个摄像头
 
 ```powershell

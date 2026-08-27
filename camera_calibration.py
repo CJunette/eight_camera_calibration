@@ -176,7 +176,7 @@ def make_aruco_dictionary(dictionary_name: str) -> Any:
 
 
 def make_charuco_board(
-    squares: Tuple[int, int], square_size: float, marker_size: float, dictionary_name: str
+    squares: Tuple[int, int], square_size: float, marker_size: float, dictionary_name: str, legacy_pattern: bool = False
 ) -> Tuple[Any, Any]:
     if squares[0] < 2 or squares[1] < 2:
         raise ValueError("ChArUco board needs at least 2x2 squares")
@@ -187,6 +187,10 @@ def make_charuco_board(
         board = cv2.aruco.CharucoBoard(squares, square_size, marker_size, dictionary)
     else:
         board = cv2.aruco.CharucoBoard_create(squares[0], squares[1], square_size, marker_size, dictionary)
+    if legacy_pattern:
+        if not hasattr(board, "setLegacyPattern"):
+            raise RuntimeError("this OpenCV version cannot enable the legacy ChArUco pattern; use OpenCV 4.6 or newer")
+        board.setLegacyPattern(True)
     return board, dictionary
 
 
@@ -259,13 +263,16 @@ def build_target_from_args(args: argparse.Namespace) -> dict:
     if args.board_type == "charuco":
         if args.min_charuco_corners < 4:
             raise ValueError("--min-charuco-corners must be at least 4")
-        board, dictionary = make_charuco_board(args.charuco_squares, args.square_size, args.marker_size, args.aruco_dict)
+        board, dictionary = make_charuco_board(
+            args.charuco_squares, args.square_size, args.marker_size, args.aruco_dict, args.charuco_legacy_pattern
+        )
         return {
             "type": "charuco",
             "charuco_squares": args.charuco_squares,
             "square_size": args.square_size,
             "marker_size": args.marker_size,
             "aruco_dict": args.aruco_dict,
+            "legacy_pattern": args.charuco_legacy_pattern,
             "min_corners": args.min_charuco_corners,
             "board": board,
             "dictionary": dictionary,
@@ -285,6 +292,7 @@ def build_target_from_manifest(manifest: dict) -> dict:
             float(manifest["square_size"]),
             float(manifest["marker_size"]),
             manifest["aruco_dict"],
+            bool(manifest.get("charuco_legacy_pattern", False)),
         )
         return {
             "type": "charuco",
@@ -292,6 +300,7 @@ def build_target_from_manifest(manifest: dict) -> dict:
             "square_size": float(manifest["square_size"]),
             "marker_size": float(manifest["marker_size"]),
             "aruco_dict": manifest["aruco_dict"],
+            "legacy_pattern": bool(manifest.get("charuco_legacy_pattern", False)),
             "min_corners": int(manifest.get("min_charuco_corners", DEFAULT_MIN_CHARUCO_CORNERS)),
             "board": board,
             "dictionary": dictionary,
@@ -407,7 +416,8 @@ def capture_samples(args: argparse.Namespace) -> None:
 
             if should_save:
                 if not all_found:
-                    print("Skipped: not all cameras see the chessboard.")
+                    missing = [str(index) for index, detection in detections.items() if not detection.found]
+                    print(f"Skipped: {target['type']} was not detected by camera(s): {', '.join(missing)}.")
                     continue
                 sample_id = len(samples)
                 sample_record = {"sample_id": sample_id, "time": now, "cameras": {}}
@@ -442,6 +452,7 @@ def capture_samples(args: argparse.Namespace) -> None:
                 "charuco_squares": list(args.charuco_squares),
                 "marker_size": args.marker_size,
                 "aruco_dict": args.aruco_dict,
+                "charuco_legacy_pattern": args.charuco_legacy_pattern,
                 "min_charuco_corners": args.min_charuco_corners,
             }
         )
@@ -654,6 +665,7 @@ def run_calibration(args: argparse.Namespace) -> None:
     }
     if manifest.get("board_type", "chessboard") == "charuco":
         results.update({key: manifest[key] for key in ("charuco_squares", "marker_size", "aruco_dict")})
+        results["charuco_legacy_pattern"] = bool(manifest.get("charuco_legacy_pattern", False))
     else:
         results["board_size"] = manifest["board_size"]
     result_path = dirs["calibration"] / "calibration_result.json"
@@ -690,6 +702,8 @@ def build_parser() -> argparse.ArgumentParser:
     capture.add_argument("--marker-size", type=float, default=DEFAULT_MARKER_SIZE,
                          help="ChArUco marker side length in meters; must be smaller than --square-size")
     capture.add_argument("--aruco-dict", default=DEFAULT_ARUCO_DICT, help="OpenCV ArUco dictionary, e.g. DICT_4X4_50")
+    capture.add_argument("--charuco-legacy-pattern", action="store_true",
+                         help="Use the pre-OpenCV-4.6 ChArUco layout (even row count starts with a white upper-left square)")
     capture.add_argument("--min-charuco-corners", type=int, default=DEFAULT_MIN_CHARUCO_CORNERS,
                          help="Minimum interpolated ChArUco corners required per camera")
     capture.add_argument("--samples", type=int, default=30, help="Valid sample sets to save")
