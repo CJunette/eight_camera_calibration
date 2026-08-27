@@ -217,12 +217,21 @@ def find_chessboard(frame: np.ndarray, board_size: Tuple[int, int]) -> TargetDet
 
 
 def find_charuco(
-    frame: np.ndarray, board: Any, dictionary: Any, min_corners: int
+    frame: np.ndarray, board: Any, dictionary: Any, min_corners: int, detector: Optional[Any] = None
 ) -> TargetDetection:
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     if hasattr(cv2.aruco, "CharucoDetector"):
-        charuco_detector = cv2.aruco.CharucoDetector(board)
-        charuco_corners, charuco_ids, marker_corners, marker_ids = charuco_detector.detectBoard(gray)
+        charuco_detector = detector or cv2.aruco.CharucoDetector(board)
+        try:
+            charuco_corners, charuco_ids, marker_corners, marker_ids = charuco_detector.detectBoard(gray)
+        except cv2.error:
+            # OpenCV 5 can occasionally invalidate a long-lived Python wrapper.
+            # Recreate it once; a second failure is a real image/OpenCV error.
+            charuco_detector = cv2.aruco.CharucoDetector(board)
+            try:
+                charuco_corners, charuco_ids, marker_corners, marker_ids = charuco_detector.detectBoard(gray)
+            except cv2.error as error:
+                raise RuntimeError(f"OpenCV failed while detecting this ChArUco image: {error}") from error
     else:
         parameters = create_detector_parameters()
         if hasattr(cv2.aruco, "ArucoDetector"):
@@ -255,7 +264,9 @@ def calibrate_charuco(
 
 def detect_target(frame: np.ndarray, target: dict) -> TargetDetection:
     if target["type"] == "charuco":
-        return find_charuco(frame, target["board"], target["dictionary"], target["min_corners"])
+        return find_charuco(
+            frame, target["board"], target["dictionary"], target["min_corners"], target.get("detector")
+        )
     return find_chessboard(frame, target["board_size"])
 
 
@@ -276,6 +287,7 @@ def build_target_from_args(args: argparse.Namespace) -> dict:
             "min_corners": args.min_charuco_corners,
             "board": board,
             "dictionary": dictionary,
+            "detector": cv2.aruco.CharucoDetector(board) if hasattr(cv2.aruco, "CharucoDetector") else None,
         }
     return {
         "type": "chessboard",
@@ -304,6 +316,7 @@ def build_target_from_manifest(manifest: dict) -> dict:
             "min_corners": int(manifest.get("min_charuco_corners", DEFAULT_MIN_CHARUCO_CORNERS)),
             "board": board,
             "dictionary": dictionary,
+            "detector": cv2.aruco.CharucoDetector(board) if hasattr(cv2.aruco, "CharucoDetector") else None,
         }
     return {
         "type": "chessboard",
