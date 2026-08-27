@@ -34,6 +34,12 @@ python camera_calibration.py capture --board-size 9x6 --square-size 0.025
 python camera_calibration.py detect --camera-count 8 --max-index 16
 ```
 
+如果要确认 8 路摄像头都能以 1920x1080 打开，建议使用 MJPG 像素格式检测：
+
+```powershell
+python camera_calibration.py detect --camera-count 8 --max-index 16 --width 1920 --height 1080 --fps 30 --fourcc MJPG
+```
+
 如果输出少于 8 个 `OK`，请先检查 USB 带宽、供电、线缆、摄像头权限或是否被其他软件占用。
 
 ## 2. 拍摄标定图片
@@ -48,6 +54,12 @@ python camera_calibration.py capture --samples 30 --output runs/session_001
 
 ```powershell
 python camera_calibration.py capture --indices 0,1,2,3,4,5,6,7 --samples 30 --output runs/session_001
+```
+
+1920x1080 采集示例：
+
+```powershell
+python camera_calibration.py capture --indices 0,1,2,3,4,5,6,7 --width 1920 --height 1080 --fps 30 --fourcc MJPG --samples 30 --output runs/session_001
 ```
 
 窗口快捷键：

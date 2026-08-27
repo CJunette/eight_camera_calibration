@@ -15,6 +15,7 @@ DEFAULT_SQUARE_SIZE = 0.025
 DEFAULT_WIDTH = 1280
 DEFAULT_HEIGHT = 720
 DEFAULT_FPS = 30
+DEFAULT_FOURCC = "MJPG"
 
 
 @dataclass
@@ -60,22 +61,24 @@ def make_output_dirs(root: Path) -> Dict[str, Path]:
     return dirs
 
 
-def open_camera(index: int, width: int, height: int, fps: int) -> cv2.VideoCapture:
+def open_camera(index: int, width: int, height: int, fps: int, fourcc: str) -> cv2.VideoCapture:
     capture = cv2.VideoCapture(index, cv2.CAP_DSHOW)
     if not capture.isOpened():
         capture.release()
         capture = cv2.VideoCapture(index)
     if capture.isOpened():
+        if fourcc:
+            capture.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*fourcc[:4]))
         capture.set(cv2.CAP_PROP_FRAME_WIDTH, width)
         capture.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
         capture.set(cv2.CAP_PROP_FPS, fps)
     return capture
 
 
-def detect_cameras(max_index: int, width: int, height: int, fps: int) -> List[CameraInfo]:
+def detect_cameras(max_index: int, width: int, height: int, fps: int, fourcc: str) -> List[CameraInfo]:
     cameras: List[CameraInfo] = []
     for index in range(max_index + 1):
-        capture = open_camera(index, width, height, fps)
+        capture = open_camera(index, width, height, fps, fourcc)
         opened = capture.isOpened()
         if opened:
             ok, _ = capture.read()
@@ -110,11 +113,11 @@ def print_camera_report(cameras: Sequence[CameraInfo], required_count: int) -> N
         )
 
 
-def open_camera_set(indices: Sequence[int], width: int, height: int, fps: int) -> Dict[int, cv2.VideoCapture]:
+def open_camera_set(indices: Sequence[int], width: int, height: int, fps: int, fourcc: str) -> Dict[int, cv2.VideoCapture]:
     captures: Dict[int, cv2.VideoCapture] = {}
     try:
         for index in indices:
-            capture = open_camera(index, width, height, fps)
+            capture = open_camera(index, width, height, fps, fourcc)
             if not capture.isOpened():
                 raise RuntimeError(f"camera index {index} could not be opened")
             for _ in range(5):
@@ -204,12 +207,14 @@ def tile_previews(previews: Sequence[np.ndarray], columns: int = 4, cell_width: 
 
 def capture_samples(args: argparse.Namespace) -> None:
     dirs = make_output_dirs(Path(args.output))
-    indices = args.indices or [camera.index for camera in detect_cameras(args.max_index, args.width, args.height, args.fps) if camera.opened]
+    indices = args.indices or [
+        camera.index for camera in detect_cameras(args.max_index, args.width, args.height, args.fps, args.fourcc) if camera.opened
+    ]
     if len(indices) != args.camera_count:
         raise SystemExit(f"Expected exactly {args.camera_count} camera indices, got {indices}")
 
     object_points = chessboard_object_points(args.board_size, args.square_size)
-    captures = open_camera_set(indices, args.width, args.height, args.fps)
+    captures = open_camera_set(indices, args.width, args.height, args.fps, args.fourcc)
     samples: List[dict] = []
     per_camera_counts = {index: 0 for index in indices}
     last_auto_capture = 0.0
@@ -429,10 +434,15 @@ def build_parser() -> argparse.ArgumentParser:
     common.add_argument("--width", type=int, default=DEFAULT_WIDTH)
     common.add_argument("--height", type=int, default=DEFAULT_HEIGHT)
     common.add_argument("--fps", type=int, default=DEFAULT_FPS)
+    common.add_argument("--fourcc", default=DEFAULT_FOURCC, help="Camera pixel format, usually MJPG or YUY2")
     common.add_argument("--max-index", type=int, default=16)
 
     detect = subparsers.add_parser("detect", parents=[common], help="List available camera device indices.")
-    detect.set_defaults(func=lambda args: print_camera_report(detect_cameras(args.max_index, args.width, args.height, args.fps), args.camera_count))
+    detect.set_defaults(
+        func=lambda args: print_camera_report(
+            detect_cameras(args.max_index, args.width, args.height, args.fps, args.fourcc), args.camera_count
+        )
+    )
 
     capture = subparsers.add_parser("capture", parents=[common], help="Capture synchronized chessboard images.")
     capture.add_argument("--indices", type=parse_indices, help="Comma-separated camera indices, for example 0,1,2,3,4,5,6,7")
