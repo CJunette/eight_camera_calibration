@@ -3,7 +3,7 @@ import json
 import time
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Dict, Iterable, List, Optional, Sequence, Tuple
+from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
 
 import cv2
 import numpy as np
@@ -16,6 +16,11 @@ DEFAULT_WIDTH = 1280
 DEFAULT_HEIGHT = 720
 DEFAULT_FPS = 30
 DEFAULT_FOURCC = "MJPG"
+DEFAULT_BOARD_TYPE = "chessboard"
+DEFAULT_CHARUCO_SQUARES = (9, 7)
+DEFAULT_MARKER_SIZE = 0.018
+DEFAULT_ARUCO_DICT = "DICT_4X4_50"
+DEFAULT_MIN_CHARUCO_CORNERS = 12
 
 
 @dataclass
@@ -26,6 +31,15 @@ class CameraInfo:
     height: float = 0.0
     fps: float = 0.0
     backend: str = ""
+
+
+@dataclass
+class TargetDetection:
+    found: bool
+    corners: Optional[np.ndarray]
+    ids: Optional[np.ndarray] = None
+    marker_corners: Optional[list] = None
+    marker_ids: Optional[np.ndarray] = None
 
 
 def parse_board_size(value: str) -> Tuple[int, int]:
@@ -152,15 +166,141 @@ def chessboard_object_points(board_size: Tuple[int, int], square_size: float) ->
     return points
 
 
-def find_chessboard(frame: np.ndarray, board_size: Tuple[int, int]) -> Tuple[bool, Optional[np.ndarray]]:
+def make_aruco_dictionary(dictionary_name: str) -> Any:
+    if not hasattr(cv2, "aruco"):
+        raise RuntimeError("cv2.aruco is unavailable. Install opencv-contrib-python instead of opencv-python.")
+    if not hasattr(cv2.aruco, dictionary_name):
+        names = sorted(name for name in dir(cv2.aruco) if name.startswith("DICT_"))
+        raise ValueError(f"unknown ArUco dictionary {dictionary_name}; choose one of: {', '.join(names)}")
+    return cv2.aruco.getPredefinedDictionary(getattr(cv2.aruco, dictionary_name))
+
+
+def make_charuco_board(
+    squares: Tuple[int, int], square_size: float, marker_size: float, dictionary_name: str
+) -> Tuple[Any, Any]:
+    if squares[0] < 2 or squares[1] < 2:
+        raise ValueError("ChArUco board needs at least 2x2 squares")
+    if square_size <= 0 or marker_size <= 0 or marker_size >= square_size:
+        raise ValueError("marker size must be positive and smaller than square size")
+    dictionary = make_aruco_dictionary(dictionary_name)
+    if hasattr(cv2.aruco, "CharucoBoard"):
+        board = cv2.aruco.CharucoBoard(squares, square_size, marker_size, dictionary)
+    else:
+        board = cv2.aruco.CharucoBoard_create(squares[0], squares[1], square_size, marker_size, dictionary)
+    return board, dictionary
+
+
+def create_detector_parameters() -> Any:
+    if hasattr(cv2.aruco, "DetectorParameters"):
+        return cv2.aruco.DetectorParameters()
+    return cv2.aruco.DetectorParameters_create()
+
+
+def board_object_points(board: Any, ids: np.ndarray) -> np.ndarray:
+    object_points = board.getChessboardCorners() if hasattr(board, "getChessboardCorners") else board.chessboardCorners
+    return np.array([object_points[int(charuco_id)] for charuco_id in ids.flatten()], dtype=np.float32)
+
+
+def find_chessboard(frame: np.ndarray, board_size: Tuple[int, int]) -> TargetDetection:
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     flags = cv2.CALIB_CB_ADAPTIVE_THRESH | cv2.CALIB_CB_NORMALIZE_IMAGE | cv2.CALIB_CB_FAST_CHECK
     found, corners = cv2.findChessboardCorners(gray, board_size, flags)
     if not found or corners is None:
-        return False, None
+        return TargetDetection(False, None)
     criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
     refined = cv2.cornerSubPix(gray, corners, (11, 11), (-1, -1), criteria)
-    return True, refined
+    return TargetDetection(True, refined)
+
+
+def find_charuco(
+    frame: np.ndarray, board: Any, dictionary: Any, min_corners: int
+) -> TargetDetection:
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    if hasattr(cv2.aruco, "CharucoDetector"):
+        charuco_detector = cv2.aruco.CharucoDetector(board)
+        charuco_corners, charuco_ids, marker_corners, marker_ids = charuco_detector.detectBoard(gray)
+    else:
+        parameters = create_detector_parameters()
+        if hasattr(cv2.aruco, "ArucoDetector"):
+            detector = cv2.aruco.ArucoDetector(dictionary, parameters)
+            marker_corners, marker_ids, _ = detector.detectMarkers(gray)
+        else:
+            marker_corners, marker_ids, _ = cv2.aruco.detectMarkers(gray, dictionary, parameters=parameters)
+        if marker_ids is None or len(marker_ids) == 0:
+            return TargetDetection(False, None, marker_ids, marker_corners, marker_ids)
+        _, charuco_corners, charuco_ids = cv2.aruco.interpolateCornersCharuco(marker_corners, marker_ids, gray, board)
+    if charuco_corners is not None:
+        charuco_corners = np.asarray(charuco_corners, dtype=np.float32).reshape(-1, 1, 2)
+    if charuco_ids is not None:
+        charuco_ids = np.asarray(charuco_ids, dtype=np.int32).reshape(-1, 1)
+    if marker_ids is not None:
+        marker_ids = np.asarray(marker_ids, dtype=np.int32).reshape(-1, 1)
+    found = charuco_ids is not None and charuco_corners is not None and len(charuco_ids) >= min_corners
+    return TargetDetection(found, charuco_corners if found else None, charuco_ids, marker_corners, marker_ids)
+
+
+def calibrate_charuco(
+    corners_by_image: Sequence[np.ndarray], ids_by_image: Sequence[np.ndarray], board: Any, image_size: Tuple[int, int]
+) -> Tuple[float, np.ndarray, np.ndarray, list, list]:
+    """Calibrate from ChArUco corners on both OpenCV 4.x and 5.x."""
+    if hasattr(cv2.aruco, "calibrateCameraCharuco"):
+        return cv2.aruco.calibrateCameraCharuco(corners_by_image, ids_by_image, board, image_size, None, None)
+    object_points = [board_object_points(board, ids) for ids in ids_by_image]
+    return cv2.calibrateCamera(object_points, list(corners_by_image), image_size, None, None)
+
+
+def detect_target(frame: np.ndarray, target: dict) -> TargetDetection:
+    if target["type"] == "charuco":
+        return find_charuco(frame, target["board"], target["dictionary"], target["min_corners"])
+    return find_chessboard(frame, target["board_size"])
+
+
+def build_target_from_args(args: argparse.Namespace) -> dict:
+    if args.board_type == "charuco":
+        if args.min_charuco_corners < 4:
+            raise ValueError("--min-charuco-corners must be at least 4")
+        board, dictionary = make_charuco_board(args.charuco_squares, args.square_size, args.marker_size, args.aruco_dict)
+        return {
+            "type": "charuco",
+            "charuco_squares": args.charuco_squares,
+            "square_size": args.square_size,
+            "marker_size": args.marker_size,
+            "aruco_dict": args.aruco_dict,
+            "min_corners": args.min_charuco_corners,
+            "board": board,
+            "dictionary": dictionary,
+        }
+    return {
+        "type": "chessboard",
+        "board_size": args.board_size,
+        "square_size": args.square_size,
+    }
+
+
+def build_target_from_manifest(manifest: dict) -> dict:
+    board_type = manifest.get("board_type", "chessboard")
+    if board_type == "charuco":
+        board, dictionary = make_charuco_board(
+            tuple(manifest["charuco_squares"]),
+            float(manifest["square_size"]),
+            float(manifest["marker_size"]),
+            manifest["aruco_dict"],
+        )
+        return {
+            "type": "charuco",
+            "charuco_squares": tuple(manifest["charuco_squares"]),
+            "square_size": float(manifest["square_size"]),
+            "marker_size": float(manifest["marker_size"]),
+            "aruco_dict": manifest["aruco_dict"],
+            "min_corners": int(manifest.get("min_charuco_corners", DEFAULT_MIN_CHARUCO_CORNERS)),
+            "board": board,
+            "dictionary": dictionary,
+        }
+    return {
+        "type": "chessboard",
+        "board_size": tuple(manifest["board_size"]),
+        "square_size": float(manifest["square_size"]),
+    }
 
 
 def chessboard_corner_variants(corners: np.ndarray, board_size: Tuple[int, int]) -> Dict[str, np.ndarray]:
@@ -178,15 +318,22 @@ def draw_status(
     frame: np.ndarray,
     camera_index: int,
     sample_count: int,
-    found: bool,
-    corners: Optional[np.ndarray],
-    board_size: Tuple[int, int],
+    detection: TargetDetection,
+    target: dict,
 ) -> np.ndarray:
     preview = frame.copy()
-    if corners is not None:
-        cv2.drawChessboardCorners(preview, board_size, corners, found)
-    color = (40, 220, 40) if found else (40, 40, 230)
-    text = f"cam {camera_index} | samples {sample_count} | {'board OK' if found else 'no board'}"
+    if target["type"] == "charuco":
+        if detection.marker_corners is not None:
+            cv2.aruco.drawDetectedMarkers(preview, detection.marker_corners, detection.marker_ids)
+        if detection.corners is not None and detection.ids is not None:
+            cv2.aruco.drawDetectedCornersCharuco(preview, detection.corners, detection.ids)
+        found_text = f"charuco {len(detection.ids) if detection.ids is not None else 0}"
+    else:
+        if detection.corners is not None:
+            cv2.drawChessboardCorners(preview, target["board_size"], detection.corners, detection.found)
+        found_text = "board OK"
+    color = (40, 220, 40) if detection.found else (40, 40, 230)
+    text = f"cam {camera_index} | samples {sample_count} | {found_text if detection.found else 'no board'}"
     cv2.rectangle(preview, (8, 8), (520, 48), (0, 0, 0), -1)
     cv2.putText(preview, text, (18, 35), cv2.FONT_HERSHEY_SIMPLEX, 0.75, color, 2, cv2.LINE_AA)
     return preview
@@ -224,23 +371,23 @@ def capture_samples(args: argparse.Namespace) -> None:
     if len(indices) != args.camera_count:
         raise SystemExit(f"Expected exactly {args.camera_count} camera indices, got {indices}")
 
-    object_points = chessboard_object_points(args.board_size, args.square_size)
+    target = build_target_from_args(args)
     captures = open_camera_set(indices, args.width, args.height, args.fps, args.fourcc)
     samples: List[dict] = []
     per_camera_counts = {index: 0 for index in indices}
     last_auto_capture = 0.0
 
     print("Controls: SPACE=save valid set, A=toggle auto capture, Q/ESC=quit")
-    print("A sample is saved only when every configured camera sees the chessboard.")
+    print(f"A sample is saved only when every configured camera sees the {target['type']} board.")
     auto_capture = args.auto
 
     try:
         while True:
             frames = read_frames(captures)
-            detections = {index: find_chessboard(frame, args.board_size) for index, frame in frames.items()}
-            all_found = all(found for found, _ in detections.values())
+            detections = {index: detect_target(frame, target) for index, frame in frames.items()}
+            all_found = all(detection.found for detection in detections.values())
             previews = [
-                draw_status(frames[index], index, per_camera_counts[index], detections[index][0], detections[index][1], args.board_size)
+                draw_status(frames[index], index, per_camera_counts[index], detections[index], target)
                 for index in indices
             ]
             tiled = tile_previews(previews)
@@ -269,9 +416,8 @@ def capture_samples(args: argparse.Namespace) -> None:
                     preview_name = f"sample_{sample_id:04d}_cam_{index}_corners.png"
                     image_path = dirs["images"] / image_name
                     preview_path = dirs["previews"] / preview_name
-                    found, corners = detections[index]
                     cv2.imwrite(str(image_path), frames[index])
-                    cv2.imwrite(str(preview_path), draw_status(frames[index], index, sample_id + 1, found, corners, args.board_size))
+                    cv2.imwrite(str(preview_path), draw_status(frames[index], index, sample_id + 1, detections[index], target))
                     sample_record["cameras"][str(index)] = {
                         "image": str(image_path.as_posix()),
                         "preview": str(preview_path.as_posix()),
@@ -286,11 +432,22 @@ def capture_samples(args: argparse.Namespace) -> None:
 
     manifest = {
         "camera_indices": indices,
-        "board_size": args.board_size,
+        "board_type": target["type"],
         "square_size": args.square_size,
-        "object_points": object_points.tolist(),
         "samples": samples,
     }
+    if target["type"] == "charuco":
+        manifest.update(
+            {
+                "charuco_squares": list(args.charuco_squares),
+                "marker_size": args.marker_size,
+                "aruco_dict": args.aruco_dict,
+                "min_charuco_corners": args.min_charuco_corners,
+            }
+        )
+    else:
+        object_points = chessboard_object_points(args.board_size, args.square_size)
+        manifest.update({"board_size": args.board_size, "object_points": object_points.tolist()})
     manifest_path = dirs["root"] / "manifest.json"
     manifest_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
     print(f"Wrote {manifest_path}")
@@ -302,83 +459,124 @@ def load_manifest(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def calibrate_intrinsics(manifest: dict) -> Tuple[dict, Dict[str, list], Dict[str, list], Tuple[int, int]]:
-    board_size = tuple(manifest["board_size"])
-    square_size = float(manifest["square_size"])
-    object_points_template = chessboard_object_points(board_size, square_size)
+def resolve_image_path(manifest_path: Path, image_path: str) -> Path:
+    path = Path(image_path)
+    if path.is_absolute():
+        return path
+    output_root = manifest_path.parent
+    candidate = output_root / path
+    if candidate.exists():
+        return candidate
+    return output_root.parent.parent / path
+
+
+def calibrate_intrinsics(manifest: dict, manifest_path: Path) -> Tuple[dict, Tuple[int, int]]:
+    target = build_target_from_manifest(manifest)
+    object_points_template = chessboard_object_points(target["board_size"], target["square_size"]) if target["type"] == "chessboard" else None
     camera_indices = [str(index) for index in manifest["camera_indices"]]
 
     object_points_by_camera: Dict[str, list] = {index: [] for index in camera_indices}
     image_points_by_camera: Dict[str, list] = {index: [] for index in camera_indices}
+    charuco_corners_by_camera: Dict[str, list] = {index: [] for index in camera_indices}
+    charuco_ids_by_camera: Dict[str, list] = {index: [] for index in camera_indices}
     image_size: Optional[Tuple[int, int]] = None
 
     for sample in manifest["samples"]:
         for camera_index in camera_indices:
-            image_path = Path(sample["cameras"][camera_index]["image"])
+            image_path = resolve_image_path(manifest_path, sample["cameras"][camera_index]["image"])
             frame = cv2.imread(str(image_path))
             if frame is None:
                 print(f"Warning: could not read {image_path}")
                 continue
             image_size = (frame.shape[1], frame.shape[0])
-            found, corners = find_chessboard(frame, board_size)
-            if found and corners is not None:
-                object_points_by_camera[camera_index].append(object_points_template)
-                image_points_by_camera[camera_index].append(corners)
+            detection = detect_target(frame, target)
+            if detection.found and detection.corners is not None:
+                if target["type"] == "charuco" and detection.ids is not None:
+                    charuco_corners_by_camera[camera_index].append(detection.corners)
+                    charuco_ids_by_camera[camera_index].append(detection.ids)
+                elif object_points_template is not None:
+                    object_points_by_camera[camera_index].append(object_points_template)
+                    image_points_by_camera[camera_index].append(detection.corners)
 
     if image_size is None:
         raise RuntimeError("no calibration images could be read")
 
     results = {}
     for camera_index in camera_indices:
-        if len(image_points_by_camera[camera_index]) < 8:
-            raise RuntimeError(
-                f"camera {camera_index} has only {len(image_points_by_camera[camera_index])} valid samples; collect at least 8"
+        if target["type"] == "charuco":
+            valid_samples = len(charuco_corners_by_camera[camera_index])
+            if valid_samples < 8:
+                raise RuntimeError(f"camera {camera_index} has only {valid_samples} valid ChArUco samples; collect at least 8")
+            rms, matrix, distortion, rvecs, tvecs = calibrate_charuco(
+                charuco_corners_by_camera[camera_index],
+                charuco_ids_by_camera[camera_index],
+                target["board"],
+                image_size,
             )
-        rms, matrix, distortion, rvecs, tvecs = cv2.calibrateCamera(
-            object_points_by_camera[camera_index], image_points_by_camera[camera_index], image_size, None, None
-        )
+        else:
+            valid_samples = len(image_points_by_camera[camera_index])
+            if valid_samples < 8:
+                raise RuntimeError(
+                    f"camera {camera_index} has only {valid_samples} valid samples; collect at least 8"
+                )
+            rms, matrix, distortion, rvecs, tvecs = cv2.calibrateCamera(
+                object_points_by_camera[camera_index], image_points_by_camera[camera_index], image_size, None, None
+            )
         results[camera_index] = {
             "rms": float(rms),
             "camera_matrix": matrix.tolist(),
             "distortion_coefficients": distortion.tolist(),
-            "valid_samples": len(image_points_by_camera[camera_index]),
+            "valid_samples": valid_samples,
             "rvecs": [rvec.tolist() for rvec in rvecs],
             "tvecs": [tvec.tolist() for tvec in tvecs],
         }
-        print(f"Intrinsic cam {camera_index}: RMS={rms:.4f}, samples={len(image_points_by_camera[camera_index])}")
+        print(f"Intrinsic cam {camera_index}: RMS={rms:.4f}, samples={valid_samples}")
 
-    return results, object_points_by_camera, image_points_by_camera, image_size
+    return results, image_size
 
 
 def calibrate_stereo_pairs(
     manifest: dict,
+    manifest_path: Path,
     intrinsics: dict,
     image_size: Tuple[int, int],
     reference_camera: str,
 ) -> dict:
-    board_size = tuple(manifest["board_size"])
-    square_size = float(manifest["square_size"])
-    object_points_template = chessboard_object_points(board_size, square_size)
+    target = build_target_from_manifest(manifest)
+    object_points_template = (
+        chessboard_object_points(target["board_size"], target["square_size"])
+        if target["type"] == "chessboard"
+        else None
+    )
     stereo_results = {}
 
-    for camera_index in [str(index) for index in manifest["camera_indices"]]:
+    for camera_index in (str(index) for index in manifest["camera_indices"]):
         if camera_index == reference_camera:
             continue
-        object_points = []
-        reference_points = []
-        target_points_by_variant: Dict[str, List[np.ndarray]] = {}
+        object_points: list = []
+        reference_points: list = []
+        target_points_by_variant: Dict[str, list] = {"normal": [], "reverse": [], "flip_x": [], "flip_y": []}
         for sample in manifest["samples"]:
-            reference_image = cv2.imread(str(Path(sample["cameras"][reference_camera]["image"])))
-            target_image = cv2.imread(str(Path(sample["cameras"][camera_index]["image"])))
-            if reference_image is None or target_image is None:
+            ref_frame = cv2.imread(str(resolve_image_path(manifest_path, sample["cameras"][reference_camera]["image"])))
+            cam_frame = cv2.imread(str(resolve_image_path(manifest_path, sample["cameras"][camera_index]["image"])))
+            if ref_frame is None or cam_frame is None:
                 continue
-            reference_found, reference_corners = find_chessboard(reference_image, board_size)
-            target_found, target_corners = find_chessboard(target_image, board_size)
-            if reference_found and target_found and reference_corners is not None and target_corners is not None:
+            reference_detection = detect_target(ref_frame, target)
+            camera_detection = detect_target(cam_frame, target)
+            if target["type"] == "charuco":
+                sample_object_points, sample_reference_points, sample_target_points = matched_charuco_points(
+                    reference_detection, camera_detection, target["board"]
+                )
+                if len(sample_object_points) < 4:
+                    continue
+                object_points.append(sample_object_points)
+                reference_points.append(sample_reference_points)
+                target_points_by_variant["normal"].append(sample_target_points)
+            elif reference_detection.found and camera_detection.found and object_points_template is not None:
                 object_points.append(object_points_template)
-                reference_points.append(reference_corners)
-                for variant_name, variant_corners in chessboard_corner_variants(target_corners, board_size).items():
-                    target_points_by_variant.setdefault(variant_name, []).append(variant_corners)
+                reference_points.append(reference_detection.corners)
+                for name, corners in chessboard_corner_variants(camera_detection.corners, target["board_size"]).items():
+                    target_points_by_variant[name].append(corners)
 
         if len(object_points) < 8:
             print(f"Skipping stereo {reference_camera}->{camera_index}: only {len(object_points)} shared samples")
@@ -388,68 +586,76 @@ def calibrate_stereo_pairs(
         ref_distortion = np.array(intrinsics[reference_camera]["distortion_coefficients"], dtype=np.float64)
         cam_intrinsic = np.array(intrinsics[camera_index]["camera_matrix"], dtype=np.float64)
         cam_distortion = np.array(intrinsics[camera_index]["distortion_coefficients"], dtype=np.float64)
-        flags = cv2.CALIB_FIX_INTRINSIC
         best_result = None
         for corner_order, target_points in target_points_by_variant.items():
+            if len(target_points) != len(object_points):
+                continue
             rms, _, _, _, _, rotation, translation, essential, fundamental = cv2.stereoCalibrate(
-                object_points,
-                reference_points,
-                target_points,
-                ref_intrinsic,
-                ref_distortion,
-                cam_intrinsic,
-                cam_distortion,
-                image_size,
-                flags=flags,
+                object_points, reference_points, target_points, ref_intrinsic, ref_distortion,
+                cam_intrinsic, cam_distortion, image_size, flags=cv2.CALIB_FIX_INTRINSIC,
             )
             if best_result is None or rms < best_result["rms"]:
-                best_result = {
-                    "corner_order": corner_order,
-                    "rms": float(rms),
-                    "rotation": rotation,
-                    "translation": translation,
-                    "essential": essential,
-                    "fundamental": fundamental,
-                }
+                best_result = {"corner_order": corner_order, "rms": float(rms), "rotation": rotation,
+                               "translation": translation, "essential": essential, "fundamental": fundamental}
         if best_result is None:
-            print(f"Skipping stereo {reference_camera}->{camera_index}: no corner variants were available")
+            print(f"Skipping stereo {reference_camera}->{camera_index}: no matched target points")
             continue
         stereo_results[camera_index] = {
-            "reference_camera": reference_camera,
-            "target_camera": camera_index,
-            "rms": best_result["rms"],
-            "corner_order": best_result["corner_order"],
-            "rotation_reference_to_target": best_result["rotation"].tolist(),
+            "reference_camera": reference_camera, "target_camera": camera_index, "rms": best_result["rms"],
+            "corner_order": best_result["corner_order"], "rotation_reference_to_target": best_result["rotation"].tolist(),
             "translation_reference_to_target": best_result["translation"].tolist(),
-            "essential_matrix": best_result["essential"].tolist(),
-            "fundamental_matrix": best_result["fundamental"].tolist(),
+            "essential_matrix": best_result["essential"].tolist(), "fundamental_matrix": best_result["fundamental"].tolist(),
             "shared_samples": len(object_points),
         }
-        print(
-            f"Stereo {reference_camera}->{camera_index}: RMS={best_result['rms']:.4f}, "
-            f"samples={len(object_points)}, corner_order={best_result['corner_order']}"
-        )
-
+        print(f"Stereo {reference_camera}->{camera_index}: RMS={best_result['rms']:.4f}, samples={len(object_points)}, corner_order={best_result['corner_order']}")
     return stereo_results
 
 
+def matched_charuco_points(
+    reference_detection: TargetDetection, target_detection: TargetDetection, board: Any
+) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+    if (
+        reference_detection.corners is None
+        or reference_detection.ids is None
+        or target_detection.corners is None
+        or target_detection.ids is None
+    ):
+        return np.empty((0, 3), np.float32), np.empty((0, 1, 2), np.float32), np.empty((0, 1, 2), np.float32)
+    reference_by_id = {
+        int(charuco_id): corner for charuco_id, corner in zip(reference_detection.ids.flatten(), reference_detection.corners)
+    }
+    target_by_id = {int(charuco_id): corner for charuco_id, corner in zip(target_detection.ids.flatten(), target_detection.corners)}
+    common_ids = sorted(set(reference_by_id).intersection(target_by_id))
+    if not common_ids:
+        return np.empty((0, 3), np.float32), np.empty((0, 1, 2), np.float32), np.empty((0, 1, 2), np.float32)
+    ids = np.array(common_ids, dtype=np.int32).reshape(-1, 1)
+    return (
+        board_object_points(board, ids),
+        np.array([reference_by_id[charuco_id] for charuco_id in common_ids], dtype=np.float32),
+        np.array([target_by_id[charuco_id] for charuco_id in common_ids], dtype=np.float32),
+    )
 def run_calibration(args: argparse.Namespace) -> None:
     output_root = Path(args.output)
     dirs = make_output_dirs(output_root)
-    manifest = load_manifest(output_root / "manifest.json")
-    intrinsics, _, _, image_size = calibrate_intrinsics(manifest)
+    manifest_path = output_root / "manifest.json"
+    manifest = load_manifest(manifest_path)
+    intrinsics, image_size = calibrate_intrinsics(manifest, manifest_path)
     reference_camera = str(args.reference)
     if reference_camera not in intrinsics:
         raise RuntimeError(f"reference camera {reference_camera} was not captured")
-    stereo = calibrate_stereo_pairs(manifest, intrinsics, image_size, reference_camera)
+    stereo = calibrate_stereo_pairs(manifest, manifest_path, intrinsics, image_size, reference_camera)
     results = {
         "image_size": image_size,
-        "board_size": manifest["board_size"],
+        "board_type": manifest.get("board_type", "chessboard"),
         "square_size": manifest["square_size"],
         "reference_camera": reference_camera,
         "intrinsics": intrinsics,
         "extrinsics_relative_to_reference": stereo,
     }
+    if manifest.get("board_type", "chessboard") == "charuco":
+        results.update({key: manifest[key] for key in ("charuco_squares", "marker_size", "aruco_dict")})
+    else:
+        results["board_size"] = manifest["board_size"]
     result_path = dirs["calibration"] / "calibration_result.json"
     result_path.write_text(json.dumps(results, indent=2), encoding="utf-8")
     print(f"Wrote {result_path}")
@@ -474,10 +680,18 @@ def build_parser() -> argparse.ArgumentParser:
         )
     )
 
-    capture = subparsers.add_parser("capture", parents=[common], help="Capture synchronized chessboard images.")
+    capture = subparsers.add_parser("capture", parents=[common], help="Capture synchronized chessboard or ChArUco images.")
     capture.add_argument("--indices", type=parse_indices, help="Comma-separated camera indices, for example 0,1,2,3,4,5,6,7")
     capture.add_argument("--board-size", type=parse_board_size, default=DEFAULT_BOARD_SIZE, help="Inner corners, e.g. 9x6")
     capture.add_argument("--square-size", type=float, default=DEFAULT_SQUARE_SIZE, help="Chessboard square size in meters")
+    capture.add_argument("--board-type", choices=("chessboard", "charuco"), default=DEFAULT_BOARD_TYPE)
+    capture.add_argument("--charuco-squares", type=parse_board_size, default=DEFAULT_CHARUCO_SQUARES,
+                         help="ChArUco square count, e.g. 9x7 (not inner corners)")
+    capture.add_argument("--marker-size", type=float, default=DEFAULT_MARKER_SIZE,
+                         help="ChArUco marker side length in meters; must be smaller than --square-size")
+    capture.add_argument("--aruco-dict", default=DEFAULT_ARUCO_DICT, help="OpenCV ArUco dictionary, e.g. DICT_4X4_50")
+    capture.add_argument("--min-charuco-corners", type=int, default=DEFAULT_MIN_CHARUCO_CORNERS,
+                         help="Minimum interpolated ChArUco corners required per camera")
     capture.add_argument("--samples", type=int, default=30, help="Valid sample sets to save")
     capture.add_argument("--interval", type=float, default=1.5, help="Auto-capture minimum interval in seconds")
     capture.add_argument("--auto", action="store_true", help="Start in auto-capture mode")

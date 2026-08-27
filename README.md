@@ -18,7 +18,7 @@ pip install -r requirements.txt
 
 ## 标定板参数
 
-默认使用 `9x6` 内角点棋盘格，默认方格边长为 `0.025` 米。
+默认使用 `9x6` 内角点棋盘格，默认方格边长为 `0.025` 米。也支持 ChArUco：默认板为 `9x7` 个方格、方格边长 `0.025` 米、ArUco 标记边长 `0.018` 米、字典 `DICT_4X4_50`。
 
 如果你的棋盘格不是这个规格，需要在采集时设置：
 
@@ -27,6 +27,14 @@ python camera_calibration.py capture --board-size 9x6 --square-size 0.025
 ```
 
 注意：`board-size` 是内角点数量，不是棋盘格方块数量。
+
+ChArUco 采集示例（`charuco-squares` 是方格数量，标记边长必须小于方格边长）：
+
+```powershell
+python camera_calibration.py capture --board-type charuco --charuco-squares 9x7 --square-size 0.025 --marker-size 0.018 --aruco-dict DICT_4X4_50 --output runs/session_charuco
+```
+
+ChArUco 需要 OpenCV 的 ArUco 模块，因此依赖为 `opencv-contrib-python`。安装时请卸载环境中冲突的 `opencv-python` 包后再执行 `pip install -r requirements.txt`。
 
 ## 1. 确认 8 个摄像头
 
@@ -64,7 +72,7 @@ python camera_calibration.py capture --indices 0,1,2,3,4,5,6,7 --width 1920 --he
 
 窗口快捷键：
 
-- `SPACE`：当 8 个摄像头都识别到棋盘格时，保存一组图片
+- `SPACE`：当 8 个摄像头都识别到当前标定板时，保存一组图片
 - `A`：开启或关闭自动采集
 - `Q` 或 `ESC`：退出采集
 
@@ -80,6 +88,12 @@ python camera_calibration.py capture --indices 0,1,2,3,4,5,6,7 --width 1920 --he
 
 ```powershell
 python camera_calibration.py calibrate --output runs/session_001 --reference 0
+```
+
+ChArUco 采集的数据使用相同的标定命令：
+
+```powershell
+python camera_calibration.py calibrate --output runs/session_charuco --reference 0
 ```
 
 标定结果保存到：
