@@ -1,0 +1,1261 @@
+{
+  "camera_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "board_size": [
+    5,
+    4
+  ],
+  "square_size": 0.035,
+  "object_points": [
+    [
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.03500000014901161,
+      0.0,
+      0.0
+    ],
+    [
+      0.07000000029802322,
+      0.0,
+      0.0
+    ],
+    [
+      0.10500000417232513,
+      0.0,
+      0.0
+    ],
+    [
+      0.14000000059604645,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.03500000014901161,
+      0.0
+    ],
+    [
+      0.03500000014901161,
+      0.03500000014901161,
+      0.0
+    ],
+    [
+      0.07000000029802322,
+      0.03500000014901161,
+      0.0
+    ],
+    [
+      0.10500000417232513,
+      0.03500000014901161,
+      0.0
+    ],
+    [
+      0.14000000059604645,
+      0.03500000014901161,
+      0.0
+    ],
+    [
+      0.0,
+      0.07000000029802322,
+      0.0
+    ],
+    [
+      0.03500000014901161,
+      0.07000000029802322,
+      0.0
+    ],
+    [
+      0.07000000029802322,
+      0.07000000029802322,
+      0.0
+    ],
+    [
+      0.10500000417232513,
+      0.07000000029802322,
+      0.0
+    ],
+    [
+      0.14000000059604645,
+      0.07000000029802322,
+      0.0
+    ],
+    [
+      0.0,
+      0.10500000417232513,
+      0.0
+    ],
+    [
+      0.03500000014901161,
+      0.10500000417232513,
+      0.0
+    ],
+    [
+      0.07000000029802322,
+      0.10500000417232513,
+      0.0
+    ],
+    [
+      0.10500000417232513,
+      0.10500000417232513,
+      0.0
+    ],
+    [
+      0.14000000059604645,
+      0.10500000417232513,
+      0.0
+    ]
+  ],
+  "samples": [
+    {
+      "sample_id": 0,
+      "time": 1787817239.250621,
+      "cameras": {
+        "0": {
+          "image": "runs/session_001/images/sample_0000_cam_0.png",
+          "preview": "runs/session_001/previews/sample_0000_cam_0_corners.png"
+        },
+        "1": {
+          "image": "runs/session_001/images/sample_0000_cam_1.png",
+          "preview": "runs/session_001/previews/sample_0000_cam_1_corners.png"
+        },
+        "2": {
+          "image": "runs/session_001/images/sample_0000_cam_2.png",
+          "preview": "runs/session_001/previews/sample_0000_cam_2_corners.png"
+        },
+        "3": {
+          "image": "runs/session_001/images/sample_0000_cam_3.png",
+          "preview": "runs/session_001/previews/sample_0000_cam_3_corners.png"
+        },
+        "4": {
+          "image": "runs/session_001/images/sample_0000_cam_4.png",
+          "preview": "runs/session_001/previews/sample_0000_cam_4_corners.png"
+        },
+        "5": {
+          "image": "runs/session_001/images/sample_0000_cam_5.png",
+          "preview": "runs/session_001/previews/sample_0000_cam_5_corners.png"
+        },
+        "6": {
+          "image": "runs/session_001/images/sample_0000_cam_6.png",
+          "preview": "runs/session_001/previews/sample_0000_cam_6_corners.png"
+        },
+        "7": {
+          "image": "runs/session_001/images/sample_0000_cam_7.png",
+          "preview": "runs/session_001/previews/sample_0000_cam_7_corners.png"
+        }
+      }
+    },
+    {
+      "sample_id": 1,
+      "time": 1787817256.657203,
+      "cameras": {
+        "0": {
+          "image": "runs/session_001/images/sample_0001_cam_0.png",
+          "preview": "runs/session_001/previews/sample_0001_cam_0_corners.png"
+        },
+        "1": {
+          "image": "runs/session_001/images/sample_0001_cam_1.png",
+          "preview": "runs/session_001/previews/sample_0001_cam_1_corners.png"
+        },
+        "2": {
+          "image": "runs/session_001/images/sample_0001_cam_2.png",
+          "preview": "runs/session_001/previews/sample_0001_cam_2_corners.png"
+        },
+        "3": {
+          "image": "runs/session_001/images/sample_0001_cam_3.png",
+          "preview": "runs/session_001/previews/sample_0001_cam_3_corners.png"
+        },
+        "4": {
+          "image": "runs/session_001/images/sample_0001_cam_4.png",
+          "preview": "runs/session_001/previews/sample_0001_cam_4_corners.png"
+        },
+        "5": {
+          "image": "runs/session_001/images/sample_0001_cam_5.png",
+          "preview": "runs/session_001/previews/sample_0001_cam_5_corners.png"
+        },
+        "6": {
+          "image": "runs/session_001/images/sample_0001_cam_6.png",
+          "preview": "runs/session_001/previews/sample_0001_cam_6_corners.png"
+        },
+        "7": {
+          "image": "runs/session_001/images/sample_0001_cam_7.png",
+          "preview": "runs/session_001/previews/sample_0001_cam_7_corners.png"
+        }
+      }
+    },
+    {
+      "sample_id": 2,
+      "time": 1787817272.493501,
+      "cameras": {
+        "0": {
+          "image": "runs/session_001/images/sample_0002_cam_0.png",
+          "preview": "runs/session_001/previews/sample_0002_cam_0_corners.png"
+        },
+        "1": {
+          "image": "runs/session_001/images/sample_0002_cam_1.png",
+          "preview": "runs/session_001/previews/sample_0002_cam_1_corners.png"
+        },
+        "2": {
+          "image": "runs/session_001/images/sample_0002_cam_2.png",
+          "preview": "runs/session_001/previews/sample_0002_cam_2_corners.png"
+        },
+        "3": {
+          "image": "runs/session_001/images/sample_0002_cam_3.png",
+          "preview": "runs/session_001/previews/sample_0002_cam_3_corners.png"
+        },
+        "4": {
+          "image": "runs/session_001/images/sample_0002_cam_4.png",
+          "preview": "runs/session_001/previews/sample_0002_cam_4_corners.png"
+        },
+        "5": {
+          "image": "runs/session_001/images/sample_0002_cam_5.png",
+          "preview": "runs/session_001/previews/sample_0002_cam_5_corners.png"
+        },
+        "6": {
+          "image": "runs/session_001/images/sample_0002_cam_6.png",
+          "preview": "runs/session_001/previews/sample_0002_cam_6_corners.png"
+        },
+        "7": {
+          "image": "runs/session_001/images/sample_0002_cam_7.png",
+          "preview": "runs/session_001/previews/sample_0002_cam_7_corners.png"
+        }
+      }
+    },
+    {
+      "sample_id": 3,
+      "time": 1787817298.3782175,
+      "cameras": {
+        "0": {
+          "image": "runs/session_001/images/sample_0003_cam_0.png",
+          "preview": "runs/session_001/previews/sample_0003_cam_0_corners.png"
+        },
+        "1": {
+          "image": "runs/session_001/images/sample_0003_cam_1.png",
+          "preview": "runs/session_001/previews/sample_0003_cam_1_corners.png"
+        },
+        "2": {
+          "image": "runs/session_001/images/sample_0003_cam_2.png",
+          "preview": "runs/session_001/previews/sample_0003_cam_2_corners.png"
+        },
+        "3": {
+          "image": "runs/session_001/images/sample_0003_cam_3.png",
+          "preview": "runs/session_001/previews/sample_0003_cam_3_corners.png"
+        },
+        "4": {
+          "image": "runs/session_001/images/sample_0003_cam_4.png",
+          "preview": "runs/session_001/previews/sample_0003_cam_4_corners.png"
+        },
+        "5": {
+          "image": "runs/session_001/images/sample_0003_cam_5.png",
+          "preview": "runs/session_001/previews/sample_0003_cam_5_corners.png"
+        },
+        "6": {
+          "image": "runs/session_001/images/sample_0003_cam_6.png",
+          "preview": "runs/session_001/previews/sample_0003_cam_6_corners.png"
+        },
+        "7": {
+          "image": "runs/session_001/images/sample_0003_cam_7.png",
+          "preview": "runs/session_001/previews/sample_0003_cam_7_corners.png"
+        }
+      }
+    },
+    {
+      "sample_id": 4,
+      "time": 1787817319.5466218,
+      "cameras": {
+        "0": {
+          "image": "runs/session_001/images/sample_0004_cam_0.png",
+          "preview": "runs/session_001/previews/sample_0004_cam_0_corners.png"
+        },
+        "1": {
+          "image": "runs/session_001/images/sample_0004_cam_1.png",
+          "preview": "runs/session_001/previews/sample_0004_cam_1_corners.png"
+        },
+        "2": {
+          "image": "runs/session_001/images/sample_0004_cam_2.png",
+          "preview": "runs/session_001/previews/sample_0004_cam_2_corners.png"
+        },
+        "3": {
+          "image": "runs/session_001/images/sample_0004_cam_3.png",
+          "preview": "runs/session_001/previews/sample_0004_cam_3_corners.png"
+        },
+        "4": {
+          "image": "runs/session_001/images/sample_0004_cam_4.png",
+          "preview": "runs/session_001/previews/sample_0004_cam_4_corners.png"
+        },
+        "5": {
+          "image": "runs/session_001/images/sample_0004_cam_5.png",
+          "preview": "runs/session_001/previews/sample_0004_cam_5_corners.png"
+        },
+        "6": {
+          "image": "runs/session_001/images/sample_0004_cam_6.png",
+          "preview": "runs/session_001/previews/sample_0004_cam_6_corners.png"
+        },
+        "7": {
+          "image": "runs/session_001/images/sample_0004_cam_7.png",
+          "preview": "runs/session_001/previews/sample_0004_cam_7_corners.png"
+        }
+      }
+    },
+    {
+      "sample_id": 5,
+      "time": 1787817332.4644759,
+      "cameras": {
+        "0": {
+          "image": "runs/session_001/images/sample_0005_cam_0.png",
+          "preview": "runs/session_001/previews/sample_0005_cam_0_corners.png"
+        },
+        "1": {
+          "image": "runs/session_001/images/sample_0005_cam_1.png",
+          "preview": "runs/session_001/previews/sample_0005_cam_1_corners.png"
+        },
+        "2": {
+          "image": "runs/session_001/images/sample_0005_cam_2.png",
+          "preview": "runs/session_001/previews/sample_0005_cam_2_corners.png"
+        },
+        "3": {
+          "image": "runs/session_001/images/sample_0005_cam_3.png",
+          "preview": "runs/session_001/previews/sample_0005_cam_3_corners.png"
+        },
+        "4": {
+          "image": "runs/session_001/images/sample_0005_cam_4.png",
+          "preview": "runs/session_001/previews/sample_0005_cam_4_corners.png"
+        },
+        "5": {
+          "image": "runs/session_001/images/sample_0005_cam_5.png",
+          "preview": "runs/session_001/previews/sample_0005_cam_5_corners.png"
+        },
+        "6": {
+          "image": "runs/session_001/images/sample_0005_cam_6.png",
+          "preview": "runs/session_001/previews/sample_0005_cam_6_corners.png"
+        },
+        "7": {
+          "image": "runs/session_001/images/sample_0005_cam_7.png",
+          "preview": "runs/session_001/previews/sample_0005_cam_7_corners.png"
+        }
+      }
+    },
+    {
+      "sample_id": 6,
+      "time": 1787817362.6225312,
+      "cameras": {
+        "0": {
+          "image": "runs/session_001/images/sample_0006_cam_0.png",
+          "preview": "runs/session_001/previews/sample_0006_cam_0_corners.png"
+        },
+        "1": {
+          "image": "runs/session_001/images/sample_0006_cam_1.png",
+          "preview": "runs/session_001/previews/sample_0006_cam_1_corners.png"
+        },
+        "2": {
+          "image": "runs/session_001/images/sample_0006_cam_2.png",
+          "preview": "runs/session_001/previews/sample_0006_cam_2_corners.png"
+        },
+        "3": {
+          "image": "runs/session_001/images/sample_0006_cam_3.png",
+          "preview": "runs/session_001/previews/sample_0006_cam_3_corners.png"
+        },
+        "4": {
+          "image": "runs/session_001/images/sample_0006_cam_4.png",
+          "preview": "runs/session_001/previews/sample_0006_cam_4_corners.png"
+        },
+        "5": {
+          "image": "runs/session_001/images/sample_0006_cam_5.png",
+          "preview": "runs/session_001/previews/sample_0006_cam_5_corners.png"
+        },
+        "6": {
+          "image": "runs/session_001/images/sample_0006_cam_6.png",
+          "preview": "runs/session_001/previews/sample_0006_cam_6_corners.png"
+        },
+        "7": {
+          "image": "runs/session_001/images/sample_0006_cam_7.png",
+          "preview": "runs/session_001/previews/sample_0006_cam_7_corners.png"
+        }
+      }
+    },
+    {
+      "sample_id": 7,
+      "time": 1787817375.9438267,
+      "cameras": {
+        "0": {
+          "image": "runs/session_001/images/sample_0007_cam_0.png",
+          "preview": "runs/session_001/previews/sample_0007_cam_0_corners.png"
+        },
+        "1": {
+          "image": "runs/session_001/images/sample_0007_cam_1.png",
+          "preview": "runs/session_001/previews/sample_0007_cam_1_corners.png"
+        },
+        "2": {
+          "image": "runs/session_001/images/sample_0007_cam_2.png",
+          "preview": "runs/session_001/previews/sample_0007_cam_2_corners.png"
+        },
+        "3": {
+          "image": "runs/session_001/images/sample_0007_cam_3.png",
+          "preview": "runs/session_001/previews/sample_0007_cam_3_corners.png"
+        },
+        "4": {
+          "image": "runs/session_001/images/sample_0007_cam_4.png",
+          "preview": "runs/session_001/previews/sample_0007_cam_4_corners.png"
+        },
+        "5": {
+          "image": "runs/session_001/images/sample_0007_cam_5.png",
+          "preview": "runs/session_001/previews/sample_0007_cam_5_corners.png"
+        },
+        "6": {
+          "image": "runs/session_001/images/sample_0007_cam_6.png",
+          "preview": "runs/session_001/previews/sample_0007_cam_6_corners.png"
+        },
+        "7": {
+          "image": "runs/session_001/images/sample_0007_cam_7.png",
+          "preview": "runs/session_001/previews/sample_0007_cam_7_corners.png"
+        }
+      }
+    },
+    {
+      "sample_id": 8,
+      "time": 1787817394.6917315,
+      "cameras": {
+        "0": {
+          "image": "runs/session_001/images/sample_0008_cam_0.png",
+          "preview": "runs/session_001/previews/sample_0008_cam_0_corners.png"
+        },
+        "1": {
+          "image": "runs/session_001/images/sample_0008_cam_1.png",
+          "preview": "runs/session_001/previews/sample_0008_cam_1_corners.png"
+        },
+        "2": {
+          "image": "runs/session_001/images/sample_0008_cam_2.png",
+          "preview": "runs/session_001/previews/sample_0008_cam_2_corners.png"
+        },
+        "3": {
+          "image": "runs/session_001/images/sample_0008_cam_3.png",
+          "preview": "runs/session_001/previews/sample_0008_cam_3_corners.png"
+        },
+        "4": {
+          "image": "runs/session_001/images/sample_0008_cam_4.png",
+          "preview": "runs/session_001/previews/sample_0008_cam_4_corners.png"
+        },
+        "5": {
+          "image": "runs/session_001/images/sample_0008_cam_5.png",
+          "preview": "runs/session_001/previews/sample_0008_cam_5_corners.png"
+        },
+        "6": {
+          "image": "runs/session_001/images/sample_0008_cam_6.png",
+          "preview": "runs/session_001/previews/sample_0008_cam_6_corners.png"
+        },
+        "7": {
+          "image": "runs/session_001/images/sample_0008_cam_7.png",
+          "preview": "runs/session_001/previews/sample_0008_cam_7_corners.png"
+        }
+      }
+    },
+    {
+      "sample_id": 9,
+      "time": 1787817403.6948316,
+      "cameras": {
+        "0": {
+          "image": "runs/session_001/images/sample_0009_cam_0.png",
+          "preview": "runs/session_001/previews/sample_0009_cam_0_corners.png"
+        },
+        "1": {
+          "image": "runs/session_001/images/sample_0009_cam_1.png",
+          "preview": "runs/session_001/previews/sample_0009_cam_1_corners.png"
+        },
+        "2": {
+          "image": "runs/session_001/images/sample_0009_cam_2.png",
+          "preview": "runs/session_001/previews/sample_0009_cam_2_corners.png"
+        },
+        "3": {
+          "image": "runs/session_001/images/sample_0009_cam_3.png",
+          "preview": "runs/session_001/previews/sample_0009_cam_3_corners.png"
+        },
+        "4": {
+          "image": "runs/session_001/images/sample_0009_cam_4.png",
+          "preview": "runs/session_001/previews/sample_0009_cam_4_corners.png"
+        },
+        "5": {
+          "image": "runs/session_001/images/sample_0009_cam_5.png",
+          "preview": "runs/session_001/previews/sample_0009_cam_5_corners.png"
+        },
+        "6": {
+          "image": "runs/session_001/images/sample_0009_cam_6.png",
+          "preview": "runs/session_001/previews/sample_0009_cam_6_corners.png"
+        },
+        "7": {
+          "image": "runs/session_001/images/sample_0009_cam_7.png",
+          "preview": "runs/session_001/previews/sample_0009_cam_7_corners.png"
+        }
+      }
+    },
+    {
+      "sample_id": 10,
+      "time": 1787817421.21653,
+      "cameras": {
+        "0": {
+          "image": "runs/session_001/images/sample_0010_cam_0.png",
+          "preview": "runs/session_001/previews/sample_0010_cam_0_corners.png"
+        },
+        "1": {
+          "image": "runs/session_001/images/sample_0010_cam_1.png",
+          "preview": "runs/session_001/previews/sample_0010_cam_1_corners.png"
+        },
+        "2": {
+          "image": "runs/session_001/images/sample_0010_cam_2.png",
+          "preview": "runs/session_001/previews/sample_0010_cam_2_corners.png"
+        },
+        "3": {
+          "image": "runs/session_001/images/sample_0010_cam_3.png",
+          "preview": "runs/session_001/previews/sample_0010_cam_3_corners.png"
+        },
+        "4": {
+          "image": "runs/session_001/images/sample_0010_cam_4.png",
+          "preview": "runs/session_001/previews/sample_0010_cam_4_corners.png"
+        },
+        "5": {
+          "image": "runs/session_001/images/sample_0010_cam_5.png",
+          "preview": "runs/session_001/previews/sample_0010_cam_5_corners.png"
+        },
+        "6": {
+          "image": "runs/session_001/images/sample_0010_cam_6.png",
+          "preview": "runs/session_001/previews/sample_0010_cam_6_corners.png"
+        },
+        "7": {
+          "image": "runs/session_001/images/sample_0010_cam_7.png",
+          "preview": "runs/session_001/previews/sample_0010_cam_7_corners.png"
+        }
+      }
+    },
+    {
+      "sample_id": 11,
+      "time": 1787817434.6451182,
+      "cameras": {
+        "0": {
+          "image": "runs/session_001/images/sample_0011_cam_0.png",
+          "preview": "runs/session_001/previews/sample_0011_cam_0_corners.png"
+        },
+        "1": {
+          "image": "runs/session_001/images/sample_0011_cam_1.png",
+          "preview": "runs/session_001/previews/sample_0011_cam_1_corners.png"
+        },
+        "2": {
+          "image": "runs/session_001/images/sample_0011_cam_2.png",
+          "preview": "runs/session_001/previews/sample_0011_cam_2_corners.png"
+        },
+        "3": {
+          "image": "runs/session_001/images/sample_0011_cam_3.png",
+          "preview": "runs/session_001/previews/sample_0011_cam_3_corners.png"
+        },
+        "4": {
+          "image": "runs/session_001/images/sample_0011_cam_4.png",
+          "preview": "runs/session_001/previews/sample_0011_cam_4_corners.png"
+        },
+        "5": {
+          "image": "runs/session_001/images/sample_0011_cam_5.png",
+          "preview": "runs/session_001/previews/sample_0011_cam_5_corners.png"
+        },
+        "6": {
+          "image": "runs/session_001/images/sample_0011_cam_6.png",
+          "preview": "runs/session_001/previews/sample_0011_cam_6_corners.png"
+        },
+        "7": {
+          "image": "runs/session_001/images/sample_0011_cam_7.png",
+          "preview": "runs/session_001/previews/sample_0011_cam_7_corners.png"
+        }
+      }
+    },
+    {
+      "sample_id": 12,
+      "time": 1787817446.8085568,
+      "cameras": {
+        "0": {
+          "image": "runs/session_001/images/sample_0012_cam_0.png",
+          "preview": "runs/session_001/previews/sample_0012_cam_0_corners.png"
+        },
+        "1": {
+          "image": "runs/session_001/images/sample_0012_cam_1.png",
+          "preview": "runs/session_001/previews/sample_0012_cam_1_corners.png"
+        },
+        "2": {
+          "image": "runs/session_001/images/sample_0012_cam_2.png",
+          "preview": "runs/session_001/previews/sample_0012_cam_2_corners.png"
+        },
+        "3": {
+          "image": "runs/session_001/images/sample_0012_cam_3.png",
+          "preview": "runs/session_001/previews/sample_0012_cam_3_corners.png"
+        },
+        "4": {
+          "image": "runs/session_001/images/sample_0012_cam_4.png",
+          "preview": "runs/session_001/previews/sample_0012_cam_4_corners.png"
+        },
+        "5": {
+          "image": "runs/session_001/images/sample_0012_cam_5.png",
+          "preview": "runs/session_001/previews/sample_0012_cam_5_corners.png"
+        },
+        "6": {
+          "image": "runs/session_001/images/sample_0012_cam_6.png",
+          "preview": "runs/session_001/previews/sample_0012_cam_6_corners.png"
+        },
+        "7": {
+          "image": "runs/session_001/images/sample_0012_cam_7.png",
+          "preview": "runs/session_001/previews/sample_0012_cam_7_corners.png"
+        }
+      }
+    },
+    {
+      "sample_id": 13,
+      "time": 1787817456.4993906,
+      "cameras": {
+        "0": {
+          "image": "runs/session_001/images/sample_0013_cam_0.png",
+          "preview": "runs/session_001/previews/sample_0013_cam_0_corners.png"
+        },
+        "1": {
+          "image": "runs/session_001/images/sample_0013_cam_1.png",
+          "preview": "runs/session_001/previews/sample_0013_cam_1_corners.png"
+        },
+        "2": {
+          "image": "runs/session_001/images/sample_0013_cam_2.png",
+          "preview": "runs/session_001/previews/sample_0013_cam_2_corners.png"
+        },
+        "3": {
+          "image": "runs/session_001/images/sample_0013_cam_3.png",
+          "preview": "runs/session_001/previews/sample_0013_cam_3_corners.png"
+        },
+        "4": {
+          "image": "runs/session_001/images/sample_0013_cam_4.png",
+          "preview": "runs/session_001/previews/sample_0013_cam_4_corners.png"
+        },
+        "5": {
+          "image": "runs/session_001/images/sample_0013_cam_5.png",
+          "preview": "runs/session_001/previews/sample_0013_cam_5_corners.png"
+        },
+        "6": {
+          "image": "runs/session_001/images/sample_0013_cam_6.png",
+          "preview": "runs/session_001/previews/sample_0013_cam_6_corners.png"
+        },
+        "7": {
+          "image": "runs/session_001/images/sample_0013_cam_7.png",
+          "preview": "runs/session_001/previews/sample_0013_cam_7_corners.png"
+        }
+      }
+    },
+    {
+      "sample_id": 14,
+      "time": 1787817470.3421493,
+      "cameras": {
+        "0": {
+          "image": "runs/session_001/images/sample_0014_cam_0.png",
+          "preview": "runs/session_001/previews/sample_0014_cam_0_corners.png"
+        },
+        "1": {
+          "image": "runs/session_001/images/sample_0014_cam_1.png",
+          "preview": "runs/session_001/previews/sample_0014_cam_1_corners.png"
+        },
+        "2": {
+          "image": "runs/session_001/images/sample_0014_cam_2.png",
+          "preview": "runs/session_001/previews/sample_0014_cam_2_corners.png"
+        },
+        "3": {
+          "image": "runs/session_001/images/sample_0014_cam_3.png",
+          "preview": "runs/session_001/previews/sample_0014_cam_3_corners.png"
+        },
+        "4": {
+          "image": "runs/session_001/images/sample_0014_cam_4.png",
+          "preview": "runs/session_001/previews/sample_0014_cam_4_corners.png"
+        },
+        "5": {
+          "image": "runs/session_001/images/sample_0014_cam_5.png",
+          "preview": "runs/session_001/previews/sample_0014_cam_5_corners.png"
+        },
+        "6": {
+          "image": "runs/session_001/images/sample_0014_cam_6.png",
+          "preview": "runs/session_001/previews/sample_0014_cam_6_corners.png"
+        },
+        "7": {
+          "image": "runs/session_001/images/sample_0014_cam_7.png",
+          "preview": "runs/session_001/previews/sample_0014_cam_7_corners.png"
+        }
+      }
+    },
+    {
+      "sample_id": 15,
+      "time": 1787817487.0426416,
+      "cameras": {
+        "0": {
+          "image": "runs/session_001/images/sample_0015_cam_0.png",
+          "preview": "runs/session_001/previews/sample_0015_cam_0_corners.png"
+        },
+        "1": {
+          "image": "runs/session_001/images/sample_0015_cam_1.png",
+          "preview": "runs/session_001/previews/sample_0015_cam_1_corners.png"
+        },
+        "2": {
+          "image": "runs/session_001/images/sample_0015_cam_2.png",
+          "preview": "runs/session_001/previews/sample_0015_cam_2_corners.png"
+        },
+        "3": {
+          "image": "runs/session_001/images/sample_0015_cam_3.png",
+          "preview": "runs/session_001/previews/sample_0015_cam_3_corners.png"
+        },
+        "4": {
+          "image": "runs/session_001/images/sample_0015_cam_4.png",
+          "preview": "runs/session_001/previews/sample_0015_cam_4_corners.png"
+        },
+        "5": {
+          "image": "runs/session_001/images/sample_0015_cam_5.png",
+          "preview": "runs/session_001/previews/sample_0015_cam_5_corners.png"
+        },
+        "6": {
+          "image": "runs/session_001/images/sample_0015_cam_6.png",
+          "preview": "runs/session_001/previews/sample_0015_cam_6_corners.png"
+        },
+        "7": {
+          "image": "runs/session_001/images/sample_0015_cam_7.png",
+          "preview": "runs/session_001/previews/sample_0015_cam_7_corners.png"
+        }
+      }
+    },
+    {
+      "sample_id": 16,
+      "time": 1787817502.6478002,
+      "cameras": {
+        "0": {
+          "image": "runs/session_001/images/sample_0016_cam_0.png",
+          "preview": "runs/session_001/previews/sample_0016_cam_0_corners.png"
+        },
+        "1": {
+          "image": "runs/session_001/images/sample_0016_cam_1.png",
+          "preview": "runs/session_001/previews/sample_0016_cam_1_corners.png"
+        },
+        "2": {
+          "image": "runs/session_001/images/sample_0016_cam_2.png",
+          "preview": "runs/session_001/previews/sample_0016_cam_2_corners.png"
+        },
+        "3": {
+          "image": "runs/session_001/images/sample_0016_cam_3.png",
+          "preview": "runs/session_001/previews/sample_0016_cam_3_corners.png"
+        },
+        "4": {
+          "image": "runs/session_001/images/sample_0016_cam_4.png",
+          "preview": "runs/session_001/previews/sample_0016_cam_4_corners.png"
+        },
+        "5": {
+          "image": "runs/session_001/images/sample_0016_cam_5.png",
+          "preview": "runs/session_001/previews/sample_0016_cam_5_corners.png"
+        },
+        "6": {
+          "image": "runs/session_001/images/sample_0016_cam_6.png",
+          "preview": "runs/session_001/previews/sample_0016_cam_6_corners.png"
+        },
+        "7": {
+          "image": "runs/session_001/images/sample_0016_cam_7.png",
+          "preview": "runs/session_001/previews/sample_0016_cam_7_corners.png"
+        }
+      }
+    },
+    {
+      "sample_id": 17,
+      "time": 1787817514.5049162,
+      "cameras": {
+        "0": {
+          "image": "runs/session_001/images/sample_0017_cam_0.png",
+          "preview": "runs/session_001/previews/sample_0017_cam_0_corners.png"
+        },
+        "1": {
+          "image": "runs/session_001/images/sample_0017_cam_1.png",
+          "preview": "runs/session_001/previews/sample_0017_cam_1_corners.png"
+        },
+        "2": {
+          "image": "runs/session_001/images/sample_0017_cam_2.png",
+          "preview": "runs/session_001/previews/sample_0017_cam_2_corners.png"
+        },
+        "3": {
+          "image": "runs/session_001/images/sample_0017_cam_3.png",
+          "preview": "runs/session_001/previews/sample_0017_cam_3_corners.png"
+        },
+        "4": {
+          "image": "runs/session_001/images/sample_0017_cam_4.png",
+          "preview": "runs/session_001/previews/sample_0017_cam_4_corners.png"
+        },
+        "5": {
+          "image": "runs/session_001/images/sample_0017_cam_5.png",
+          "preview": "runs/session_001/previews/sample_0017_cam_5_corners.png"
+        },
+        "6": {
+          "image": "runs/session_001/images/sample_0017_cam_6.png",
+          "preview": "runs/session_001/previews/sample_0017_cam_6_corners.png"
+        },
+        "7": {
+          "image": "runs/session_001/images/sample_0017_cam_7.png",
+          "preview": "runs/session_001/previews/sample_0017_cam_7_corners.png"
+        }
+      }
+    },
+    {
+      "sample_id": 18,
+      "time": 1787817548.2965944,
+      "cameras": {
+        "0": {
+          "image": "runs/session_001/images/sample_0018_cam_0.png",
+          "preview": "runs/session_001/previews/sample_0018_cam_0_corners.png"
+        },
+        "1": {
+          "image": "runs/session_001/images/sample_0018_cam_1.png",
+          "preview": "runs/session_001/previews/sample_0018_cam_1_corners.png"
+        },
+        "2": {
+          "image": "runs/session_001/images/sample_0018_cam_2.png",
+          "preview": "runs/session_001/previews/sample_0018_cam_2_corners.png"
+        },
+        "3": {
+          "image": "runs/session_001/images/sample_0018_cam_3.png",
+          "preview": "runs/session_001/previews/sample_0018_cam_3_corners.png"
+        },
+        "4": {
+          "image": "runs/session_001/images/sample_0018_cam_4.png",
+          "preview": "runs/session_001/previews/sample_0018_cam_4_corners.png"
+        },
+        "5": {
+          "image": "runs/session_001/images/sample_0018_cam_5.png",
+          "preview": "runs/session_001/previews/sample_0018_cam_5_corners.png"
+        },
+        "6": {
+          "image": "runs/session_001/images/sample_0018_cam_6.png",
+          "preview": "runs/session_001/previews/sample_0018_cam_6_corners.png"
+        },
+        "7": {
+          "image": "runs/session_001/images/sample_0018_cam_7.png",
+          "preview": "runs/session_001/previews/sample_0018_cam_7_corners.png"
+        }
+      }
+    },
+    {
+      "sample_id": 19,
+      "time": 1787817560.1126506,
+      "cameras": {
+        "0": {
+          "image": "runs/session_001/images/sample_0019_cam_0.png",
+          "preview": "runs/session_001/previews/sample_0019_cam_0_corners.png"
+        },
+        "1": {
+          "image": "runs/session_001/images/sample_0019_cam_1.png",
+          "preview": "runs/session_001/previews/sample_0019_cam_1_corners.png"
+        },
+        "2": {
+          "image": "runs/session_001/images/sample_0019_cam_2.png",
+          "preview": "runs/session_001/previews/sample_0019_cam_2_corners.png"
+        },
+        "3": {
+          "image": "runs/session_001/images/sample_0019_cam_3.png",
+          "preview": "runs/session_001/previews/sample_0019_cam_3_corners.png"
+        },
+        "4": {
+          "image": "runs/session_001/images/sample_0019_cam_4.png",
+          "preview": "runs/session_001/previews/sample_0019_cam_4_corners.png"
+        },
+        "5": {
+          "image": "runs/session_001/images/sample_0019_cam_5.png",
+          "preview": "runs/session_001/previews/sample_0019_cam_5_corners.png"
+        },
+        "6": {
+          "image": "runs/session_001/images/sample_0019_cam_6.png",
+          "preview": "runs/session_001/previews/sample_0019_cam_6_corners.png"
+        },
+        "7": {
+          "image": "runs/session_001/images/sample_0019_cam_7.png",
+          "preview": "runs/session_001/previews/sample_0019_cam_7_corners.png"
+        }
+      }
+    },
+    {
+      "sample_id": 20,
+      "time": 1787817582.0247648,
+      "cameras": {
+        "0": {
+          "image": "runs/session_001/images/sample_0020_cam_0.png",
+          "preview": "runs/session_001/previews/sample_0020_cam_0_corners.png"
+        },
+        "1": {
+          "image": "runs/session_001/images/sample_0020_cam_1.png",
+          "preview": "runs/session_001/previews/sample_0020_cam_1_corners.png"
+        },
+        "2": {
+          "image": "runs/session_001/images/sample_0020_cam_2.png",
+          "preview": "runs/session_001/previews/sample_0020_cam_2_corners.png"
+        },
+        "3": {
+          "image": "runs/session_001/images/sample_0020_cam_3.png",
+          "preview": "runs/session_001/previews/sample_0020_cam_3_corners.png"
+        },
+        "4": {
+          "image": "runs/session_001/images/sample_0020_cam_4.png",
+          "preview": "runs/session_001/previews/sample_0020_cam_4_corners.png"
+        },
+        "5": {
+          "image": "runs/session_001/images/sample_0020_cam_5.png",
+          "preview": "runs/session_001/previews/sample_0020_cam_5_corners.png"
+        },
+        "6": {
+          "image": "runs/session_001/images/sample_0020_cam_6.png",
+          "preview": "runs/session_001/previews/sample_0020_cam_6_corners.png"
+        },
+        "7": {
+          "image": "runs/session_001/images/sample_0020_cam_7.png",
+          "preview": "runs/session_001/previews/sample_0020_cam_7_corners.png"
+        }
+      }
+    },
+    {
+      "sample_id": 21,
+      "time": 1787817595.0805757,
+      "cameras": {
+        "0": {
+          "image": "runs/session_001/images/sample_0021_cam_0.png",
+          "preview": "runs/session_001/previews/sample_0021_cam_0_corners.png"
+        },
+        "1": {
+          "image": "runs/session_001/images/sample_0021_cam_1.png",
+          "preview": "runs/session_001/previews/sample_0021_cam_1_corners.png"
+        },
+        "2": {
+          "image": "runs/session_001/images/sample_0021_cam_2.png",
+          "preview": "runs/session_001/previews/sample_0021_cam_2_corners.png"
+        },
+        "3": {
+          "image": "runs/session_001/images/sample_0021_cam_3.png",
+          "preview": "runs/session_001/previews/sample_0021_cam_3_corners.png"
+        },
+        "4": {
+          "image": "runs/session_001/images/sample_0021_cam_4.png",
+          "preview": "runs/session_001/previews/sample_0021_cam_4_corners.png"
+        },
+        "5": {
+          "image": "runs/session_001/images/sample_0021_cam_5.png",
+          "preview": "runs/session_001/previews/sample_0021_cam_5_corners.png"
+        },
+        "6": {
+          "image": "runs/session_001/images/sample_0021_cam_6.png",
+          "preview": "runs/session_001/previews/sample_0021_cam_6_corners.png"
+        },
+        "7": {
+          "image": "runs/session_001/images/sample_0021_cam_7.png",
+          "preview": "runs/session_001/previews/sample_0021_cam_7_corners.png"
+        }
+      }
+    },
+    {
+      "sample_id": 22,
+      "time": 1787817608.9624195,
+      "cameras": {
+        "0": {
+          "image": "runs/session_001/images/sample_0022_cam_0.png",
+          "preview": "runs/session_001/previews/sample_0022_cam_0_corners.png"
+        },
+        "1": {
+          "image": "runs/session_001/images/sample_0022_cam_1.png",
+          "preview": "runs/session_001/previews/sample_0022_cam_1_corners.png"
+        },
+        "2": {
+          "image": "runs/session_001/images/sample_0022_cam_2.png",
+          "preview": "runs/session_001/previews/sample_0022_cam_2_corners.png"
+        },
+        "3": {
+          "image": "runs/session_001/images/sample_0022_cam_3.png",
+          "preview": "runs/session_001/previews/sample_0022_cam_3_corners.png"
+        },
+        "4": {
+          "image": "runs/session_001/images/sample_0022_cam_4.png",
+          "preview": "runs/session_001/previews/sample_0022_cam_4_corners.png"
+        },
+        "5": {
+          "image": "runs/session_001/images/sample_0022_cam_5.png",
+          "preview": "runs/session_001/previews/sample_0022_cam_5_corners.png"
+        },
+        "6": {
+          "image": "runs/session_001/images/sample_0022_cam_6.png",
+          "preview": "runs/session_001/previews/sample_0022_cam_6_corners.png"
+        },
+        "7": {
+          "image": "runs/session_001/images/sample_0022_cam_7.png",
+          "preview": "runs/session_001/previews/sample_0022_cam_7_corners.png"
+        }
+      }
+    },
+    {
+      "sample_id": 23,
+      "time": 1787817621.4243066,
+      "cameras": {
+        "0": {
+          "image": "runs/session_001/images/sample_0023_cam_0.png",
+          "preview": "runs/session_001/previews/sample_0023_cam_0_corners.png"
+        },
+        "1": {
+          "image": "runs/session_001/images/sample_0023_cam_1.png",
+          "preview": "runs/session_001/previews/sample_0023_cam_1_corners.png"
+        },
+        "2": {
+          "image": "runs/session_001/images/sample_0023_cam_2.png",
+          "preview": "runs/session_001/previews/sample_0023_cam_2_corners.png"
+        },
+        "3": {
+          "image": "runs/session_001/images/sample_0023_cam_3.png",
+          "preview": "runs/session_001/previews/sample_0023_cam_3_corners.png"
+        },
+        "4": {
+          "image": "runs/session_001/images/sample_0023_cam_4.png",
+          "preview": "runs/session_001/previews/sample_0023_cam_4_corners.png"
+        },
+        "5": {
+          "image": "runs/session_001/images/sample_0023_cam_5.png",
+          "preview": "runs/session_001/previews/sample_0023_cam_5_corners.png"
+        },
+        "6": {
+          "image": "runs/session_001/images/sample_0023_cam_6.png",
+          "preview": "runs/session_001/previews/sample_0023_cam_6_corners.png"
+        },
+        "7": {
+          "image": "runs/session_001/images/sample_0023_cam_7.png",
+          "preview": "runs/session_001/previews/sample_0023_cam_7_corners.png"
+        }
+      }
+    },
+    {
+      "sample_id": 24,
+      "time": 1787817650.5526013,
+      "cameras": {
+        "0": {
+          "image": "runs/session_001/images/sample_0024_cam_0.png",
+          "preview": "runs/session_001/previews/sample_0024_cam_0_corners.png"
+        },
+        "1": {
+          "image": "runs/session_001/images/sample_0024_cam_1.png",
+          "preview": "runs/session_001/previews/sample_0024_cam_1_corners.png"
+        },
+        "2": {
+          "image": "runs/session_001/images/sample_0024_cam_2.png",
+          "preview": "runs/session_001/previews/sample_0024_cam_2_corners.png"
+        },
+        "3": {
+          "image": "runs/session_001/images/sample_0024_cam_3.png",
+          "preview": "runs/session_001/previews/sample_0024_cam_3_corners.png"
+        },
+        "4": {
+          "image": "runs/session_001/images/sample_0024_cam_4.png",
+          "preview": "runs/session_001/previews/sample_0024_cam_4_corners.png"
+        },
+        "5": {
+          "image": "runs/session_001/images/sample_0024_cam_5.png",
+          "preview": "runs/session_001/previews/sample_0024_cam_5_corners.png"
+        },
+        "6": {
+          "image": "runs/session_001/images/sample_0024_cam_6.png",
+          "preview": "runs/session_001/previews/sample_0024_cam_6_corners.png"
+        },
+        "7": {
+          "image": "runs/session_001/images/sample_0024_cam_7.png",
+          "preview": "runs/session_001/previews/sample_0024_cam_7_corners.png"
+        }
+      }
+    },
+    {
+      "sample_id": 25,
+      "time": 1787817664.65829,
+      "cameras": {
+        "0": {
+          "image": "runs/session_001/images/sample_0025_cam_0.png",
+          "preview": "runs/session_001/previews/sample_0025_cam_0_corners.png"
+        },
+        "1": {
+          "image": "runs/session_001/images/sample_0025_cam_1.png",
+          "preview": "runs/session_001/previews/sample_0025_cam_1_corners.png"
+        },
+        "2": {
+          "image": "runs/session_001/images/sample_0025_cam_2.png",
+          "preview": "runs/session_001/previews/sample_0025_cam_2_corners.png"
+        },
+        "3": {
+          "image": "runs/session_001/images/sample_0025_cam_3.png",
+          "preview": "runs/session_001/previews/sample_0025_cam_3_corners.png"
+        },
+        "4": {
+          "image": "runs/session_001/images/sample_0025_cam_4.png",
+          "preview": "runs/session_001/previews/sample_0025_cam_4_corners.png"
+        },
+        "5": {
+          "image": "runs/session_001/images/sample_0025_cam_5.png",
+          "preview": "runs/session_001/previews/sample_0025_cam_5_corners.png"
+        },
+        "6": {
+          "image": "runs/session_001/images/sample_0025_cam_6.png",
+          "preview": "runs/session_001/previews/sample_0025_cam_6_corners.png"
+        },
+        "7": {
+          "image": "runs/session_001/images/sample_0025_cam_7.png",
+          "preview": "runs/session_001/previews/sample_0025_cam_7_corners.png"
+        }
+      }
+    },
+    {
+      "sample_id": 26,
+      "time": 1787817685.2650998,
+      "cameras": {
+        "0": {
+          "image": "runs/session_001/images/sample_0026_cam_0.png",
+          "preview": "runs/session_001/previews/sample_0026_cam_0_corners.png"
+        },
+        "1": {
+          "image": "runs/session_001/images/sample_0026_cam_1.png",
+          "preview": "runs/session_001/previews/sample_0026_cam_1_corners.png"
+        },
+        "2": {
+          "image": "runs/session_001/images/sample_0026_cam_2.png",
+          "preview": "runs/session_001/previews/sample_0026_cam_2_corners.png"
+        },
+        "3": {
+          "image": "runs/session_001/images/sample_0026_cam_3.png",
+          "preview": "runs/session_001/previews/sample_0026_cam_3_corners.png"
+        },
+        "4": {
+          "image": "runs/session_001/images/sample_0026_cam_4.png",
+          "preview": "runs/session_001/previews/sample_0026_cam_4_corners.png"
+        },
+        "5": {
+          "image": "runs/session_001/images/sample_0026_cam_5.png",
+          "preview": "runs/session_001/previews/sample_0026_cam_5_corners.png"
+        },
+        "6": {
+          "image": "runs/session_001/images/sample_0026_cam_6.png",
+          "preview": "runs/session_001/previews/sample_0026_cam_6_corners.png"
+        },
+        "7": {
+          "image": "runs/session_001/images/sample_0026_cam_7.png",
+          "preview": "runs/session_001/previews/sample_0026_cam_7_corners.png"
+        }
+      }
+    },
+    {
+      "sample_id": 27,
+      "time": 1787817711.2092776,
+      "cameras": {
+        "0": {
+          "image": "runs/session_001/images/sample_0027_cam_0.png",
+          "preview": "runs/session_001/previews/sample_0027_cam_0_corners.png"
+        },
+        "1": {
+          "image": "runs/session_001/images/sample_0027_cam_1.png",
+          "preview": "runs/session_001/previews/sample_0027_cam_1_corners.png"
+        },
+        "2": {
+          "image": "runs/session_001/images/sample_0027_cam_2.png",
+          "preview": "runs/session_001/previews/sample_0027_cam_2_corners.png"
+        },
+        "3": {
+          "image": "runs/session_001/images/sample_0027_cam_3.png",
+          "preview": "runs/session_001/previews/sample_0027_cam_3_corners.png"
+        },
+        "4": {
+          "image": "runs/session_001/images/sample_0027_cam_4.png",
+          "preview": "runs/session_001/previews/sample_0027_cam_4_corners.png"
+        },
+        "5": {
+          "image": "runs/session_001/images/sample_0027_cam_5.png",
+          "preview": "runs/session_001/previews/sample_0027_cam_5_corners.png"
+        },
+        "6": {
+          "image": "runs/session_001/images/sample_0027_cam_6.png",
+          "preview": "runs/session_001/previews/sample_0027_cam_6_corners.png"
+        },
+        "7": {
+          "image": "runs/session_001/images/sample_0027_cam_7.png",
+          "preview": "runs/session_001/previews/sample_0027_cam_7_corners.png"
+        }
+      }
+    },
+    {
+      "sample_id": 28,
+      "time": 1787817722.2027028,
+      "cameras": {
+        "0": {
+          "image": "runs/session_001/images/sample_0028_cam_0.png",
+          "preview": "runs/session_001/previews/sample_0028_cam_0_corners.png"
+        },
+        "1": {
+          "image": "runs/session_001/images/sample_0028_cam_1.png",
+          "preview": "runs/session_001/previews/sample_0028_cam_1_corners.png"
+        },
+        "2": {
+          "image": "runs/session_001/images/sample_0028_cam_2.png",
+          "preview": "runs/session_001/previews/sample_0028_cam_2_corners.png"
+        },
+        "3": {
+          "image": "runs/session_001/images/sample_0028_cam_3.png",
+          "preview": "runs/session_001/previews/sample_0028_cam_3_corners.png"
+        },
+        "4": {
+          "image": "runs/session_001/images/sample_0028_cam_4.png",
+          "preview": "runs/session_001/previews/sample_0028_cam_4_corners.png"
+        },
+        "5": {
+          "image": "runs/session_001/images/sample_0028_cam_5.png",
+          "preview": "runs/session_001/previews/sample_0028_cam_5_corners.png"
+        },
+        "6": {
+          "image": "runs/session_001/images/sample_0028_cam_6.png",
+          "preview": "runs/session_001/previews/sample_0028_cam_6_corners.png"
+        },
+        "7": {
+          "image": "runs/session_001/images/sample_0028_cam_7.png",
+          "preview": "runs/session_001/previews/sample_0028_cam_7_corners.png"
+        }
+      }
+    },
+    {
+      "sample_id": 29,
+      "time": 1787817740.04661,
+      "cameras": {
+        "0": {
+          "image": "runs/session_001/images/sample_0029_cam_0.png",
+          "preview": "runs/session_001/previews/sample_0029_cam_0_corners.png"
+        },
+        "1": {
+          "image": "runs/session_001/images/sample_0029_cam_1.png",
+          "preview": "runs/session_001/previews/sample_0029_cam_1_corners.png"
+        },
+        "2": {
+          "image": "runs/session_001/images/sample_0029_cam_2.png",
+          "preview": "runs/session_001/previews/sample_0029_cam_2_corners.png"
+        },
+        "3": {
+          "image": "runs/session_001/images/sample_0029_cam_3.png",
+          "preview": "runs/session_001/previews/sample_0029_cam_3_corners.png"
+        },
+        "4": {
+          "image": "runs/session_001/images/sample_0029_cam_4.png",
+          "preview": "runs/session_001/previews/sample_0029_cam_4_corners.png"
+        },
+        "5": {
+          "image": "runs/session_001/images/sample_0029_cam_5.png",
+          "preview": "runs/session_001/previews/sample_0029_cam_5_corners.png"
+        },
+        "6": {
+          "image": "runs/session_001/images/sample_0029_cam_6.png",
+          "preview": "runs/session_001/previews/sample_0029_cam_6_corners.png"
+        },
+        "7": {
+          "image": "runs/session_001/images/sample_0029_cam_7.png",
+          "preview": "runs/session_001/previews/sample_0029_cam_7_corners.png"
+        }
+      }
+    }
+  ]
+}

@@ -163,6 +163,17 @@ def find_chessboard(frame: np.ndarray, board_size: Tuple[int, int]) -> Tuple[boo
     return True, refined
 
 
+def chessboard_corner_variants(corners: np.ndarray, board_size: Tuple[int, int]) -> Dict[str, np.ndarray]:
+    columns, rows = board_size
+    grid = corners.reshape(rows, columns, 1, 2)
+    return {
+        "normal": grid.copy().reshape(-1, 1, 2),
+        "reverse": grid[::-1, ::-1].copy().reshape(-1, 1, 2),
+        "flip_x": grid[:, ::-1].copy().reshape(-1, 1, 2),
+        "flip_y": grid[::-1, :].copy().reshape(-1, 1, 2),
+    }
+
+
 def draw_status(
     frame: np.ndarray,
     camera_index: int,
@@ -355,7 +366,7 @@ def calibrate_stereo_pairs(
             continue
         object_points = []
         reference_points = []
-        target_points = []
+        target_points_by_variant: Dict[str, List[np.ndarray]] = {}
         for sample in manifest["samples"]:
             reference_image = cv2.imread(str(Path(sample["cameras"][reference_camera]["image"])))
             target_image = cv2.imread(str(Path(sample["cameras"][camera_index]["image"])))
@@ -366,7 +377,8 @@ def calibrate_stereo_pairs(
             if reference_found and target_found and reference_corners is not None and target_corners is not None:
                 object_points.append(object_points_template)
                 reference_points.append(reference_corners)
-                target_points.append(target_corners)
+                for variant_name, variant_corners in chessboard_corner_variants(target_corners, board_size).items():
+                    target_points_by_variant.setdefault(variant_name, []).append(variant_corners)
 
         if len(object_points) < 8:
             print(f"Skipping stereo {reference_camera}->{camera_index}: only {len(object_points)} shared samples")
@@ -377,28 +389,46 @@ def calibrate_stereo_pairs(
         cam_intrinsic = np.array(intrinsics[camera_index]["camera_matrix"], dtype=np.float64)
         cam_distortion = np.array(intrinsics[camera_index]["distortion_coefficients"], dtype=np.float64)
         flags = cv2.CALIB_FIX_INTRINSIC
-        rms, _, _, _, _, rotation, translation, essential, fundamental = cv2.stereoCalibrate(
-            object_points,
-            reference_points,
-            target_points,
-            ref_intrinsic,
-            ref_distortion,
-            cam_intrinsic,
-            cam_distortion,
-            image_size,
-            flags=flags,
-        )
+        best_result = None
+        for corner_order, target_points in target_points_by_variant.items():
+            rms, _, _, _, _, rotation, translation, essential, fundamental = cv2.stereoCalibrate(
+                object_points,
+                reference_points,
+                target_points,
+                ref_intrinsic,
+                ref_distortion,
+                cam_intrinsic,
+                cam_distortion,
+                image_size,
+                flags=flags,
+            )
+            if best_result is None or rms < best_result["rms"]:
+                best_result = {
+                    "corner_order": corner_order,
+                    "rms": float(rms),
+                    "rotation": rotation,
+                    "translation": translation,
+                    "essential": essential,
+                    "fundamental": fundamental,
+                }
+        if best_result is None:
+            print(f"Skipping stereo {reference_camera}->{camera_index}: no corner variants were available")
+            continue
         stereo_results[camera_index] = {
             "reference_camera": reference_camera,
             "target_camera": camera_index,
-            "rms": float(rms),
-            "rotation_reference_to_target": rotation.tolist(),
-            "translation_reference_to_target": translation.tolist(),
-            "essential_matrix": essential.tolist(),
-            "fundamental_matrix": fundamental.tolist(),
+            "rms": best_result["rms"],
+            "corner_order": best_result["corner_order"],
+            "rotation_reference_to_target": best_result["rotation"].tolist(),
+            "translation_reference_to_target": best_result["translation"].tolist(),
+            "essential_matrix": best_result["essential"].tolist(),
+            "fundamental_matrix": best_result["fundamental"].tolist(),
             "shared_samples": len(object_points),
         }
-        print(f"Stereo {reference_camera}->{camera_index}: RMS={rms:.4f}, samples={len(object_points)}")
+        print(
+            f"Stereo {reference_camera}->{camera_index}: RMS={best_result['rms']:.4f}, "
+            f"samples={len(object_points)}, corner_order={best_result['corner_order']}"
+        )
 
     return stereo_results
 
